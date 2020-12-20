@@ -29,5 +29,13 @@ public class Switch : MonoBehaviour
         }
 
     }
+    public void ToggleEffects()
+    {
+        AudioSource audioSource = GetComponent<AudioSource>();
+        if (audioSource.isPlaying)
+            audioSource.Stop();
+        else
+            audioSource.Play();
+    }
 
 }

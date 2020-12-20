@@ -17,6 +17,4 @@ public class SoundList : ScriptableObject
     public AudioClip SwitchSound;
 
     public float VolumeMusic;
-    public bool Music;
-    public bool Effects;
 }

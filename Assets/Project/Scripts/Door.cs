@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -40,5 +41,15 @@ public class Door : MonoBehaviour
         if (isOpen) {
             SystemController.instance.ToggleNextLvl(GetComponent<AudioSource>());
         }
+    }
+
+    public void ToggleEffects()
+    {
+        AudioSource audioSource = GetComponent<AudioSource>();
+        if (audioSource.isPlaying)
+            audioSource.Stop();
+        else
+            audioSource.Play();
+        
     }
 }

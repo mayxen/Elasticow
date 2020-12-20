@@ -40,7 +40,6 @@ public class Cow : MonoBehaviour
     float extendSprite;
     int bodyTotal = 0;
 
-
     private void Start()
     {
         SaveInitialPos();
@@ -73,7 +72,13 @@ public class Cow : MonoBehaviour
     {
         bodys.Add(body);
     }
-
+    public void ToggleEffects()
+    {
+        if(audioSource.isPlaying)
+            audioSource.Stop();
+        else
+            audioSource.Play();
+    }
     public void ResetCow()
     {
         while (bodys.Count != 1) {

@@ -25,20 +25,16 @@ public class SystemController : MonoBehaviour
     [SerializeField] int nextScene = 0;
 
     [Header("Settings")]
-    [SerializeField] GameObject MusicOnGO = null;
-    [SerializeField] GameObject MusicOffGO = null;
-    [SerializeField] GameObject EffectsOnGO = null;
-    [SerializeField] GameObject EffectsOffGO = null;
     [SerializeField] Slider sliderVolumen = null;
     [SerializeField] SoundList SoundList = null;
     [SerializeField] AudioSource audioSource = null;
 
     [Header("Animations")]
-    [SerializeField] GameObject animationLvl0= null;
+    [SerializeField] GameObject animationLvl0 = null;
     [SerializeField] GameObject animationEnd = null;
 
     public static SystemController instance;
-    public enum ControllerType { menu, lvl , end };
+    public enum ControllerType { menu, lvl, end };
     public ControllerType controllerType;
     List<Switch> switches = new List<Switch>();
     int lvlsCompleted = 0;
@@ -52,8 +48,6 @@ public class SystemController : MonoBehaviour
     private void SetUpSettings()
     {
         SoundList.VolumeMusic = PlayerPrefs.GetFloat("volumeSet", 0.5f);
-        SoundList.Music = PlayerPrefs.GetInt("musicSet", 1) > 0;
-        SoundList.Effects = PlayerPrefs.GetInt("effectSet", 1) > 0;
 
         SetUpAudioSource();
         SetUpAudioInterface();
@@ -63,35 +57,26 @@ public class SystemController : MonoBehaviour
     private void SetUpAudioInterface()
     {
         sliderVolumen.value = SoundList.VolumeMusic * 100f;
-        MusicOnGO.SetActive(SoundList.Music);
-        MusicOffGO.SetActive(!SoundList.Music);
-        EffectsOnGO.SetActive(SoundList.Effects);
-        EffectsOffGO.SetActive(!SoundList.Effects);
     }
 
     private void SetUpAudioSource()
     {
-        if(SoundList.Music)
-            audioSource.volume = SoundList.VolumeMusic;
+        audioSource.Play();
     }
     public void PlayDoorSound(AudioSource audioSource)
     {
-        if (SoundList.Effects) {
-            audioSource.clip = SoundList.DoorSound;
-            audioSource.volume = SoundList.VolumeMusic;
-            audioSource.loop = false;
-            audioSource.Play();
-        }
+        audioSource.clip = SoundList.DoorSound;
+        audioSource.volume = SoundList.VolumeMusic;
+        audioSource.loop = false;
+        audioSource.Play();
     }
 
     public void PlayMooSound(AudioSource audioSource)
     {
-        if (SoundList.Effects) {
-            audioSource.clip = SoundList.MooSound2;
-            audioSource.volume = SoundList.VolumeMusic;
-            audioSource.loop = false;
-            audioSource.Play();
-        }
+        audioSource.clip = SoundList.MooSound2;
+        audioSource.volume = SoundList.VolumeMusic;
+        audioSource.loop = false;
+        audioSource.Play();
     }
 
     public void ResetSwitches(AudioSource audioSource)
@@ -100,32 +85,30 @@ public class SystemController : MonoBehaviour
             switchInstace.SetSwitchOff();
         }
         FindObjectOfType<Door>().ResetDoor();
-        if(SoundList.Effects) {
-            audioSource.clip = SoundList.MooSound3;
-            audioSource.volume = SoundList.VolumeMusic;
-            audioSource.loop = false;
-            audioSource.Play();
-        }
+        audioSource.clip = SoundList.MooSound3;
+        audioSource.volume = SoundList.VolumeMusic;
+        audioSource.loop = false;
+        audioSource.Play();
     }
     public void PlaySwitchSound(AudioSource audioSource)
     {
-        if (SoundList.Effects) {
-            audioSource.clip = SoundList.SwitchSound;
-            audioSource.volume = SoundList.VolumeMusic;
-            audioSource.loop = false;
-            audioSource.Play();
-        }
+        audioSource.clip = SoundList.SwitchSound;
+        audioSource.volume = SoundList.VolumeMusic;
+        audioSource.loop = false;
+        audioSource.Play();
     }
 
     void PlayLobbyMusic()
     {
-        audioSource.loop = true;
         audioSource.clip = SoundList.AmbientMusicLobby;
+        audioSource.volume = SoundList.VolumeMusic;
+        audioSource.loop = true;
         audioSource.Play();
     }
 
     void PlayGameMusic()
     {
+        audioSource.volume = SoundList.VolumeMusic;
         audioSource.loop = true;
         audioSource.clip = SoundList.AmbientMusicGame;
         audioSource.Play();
@@ -133,12 +116,14 @@ public class SystemController : MonoBehaviour
 
     public void PlayIntroMusic()
     {
+        audioSource.volume = SoundList.VolumeMusic;
         audioSource.clip = SoundList.AmbientIntro;
         audioSource.loop = true;
         audioSource.Play();
     }
     public void PlayEndMusic()
     {
+        audioSource.volume = SoundList.VolumeMusic;
         audioSource.loop = true;
         audioSource.clip = SoundList.AmbientEnd;
         audioSource.Play();
@@ -163,7 +148,7 @@ public class SystemController : MonoBehaviour
             if (lvlsCompleted < nextScene)
                 PlayerPrefs.SetInt("lvlsCompleted", nextScene);
         }
-        if(level == 0) {
+        if (level == 0) {
             animationLvl0.SetActive(true);
             return;
         }
@@ -193,28 +178,15 @@ public class SystemController : MonoBehaviour
     {
         TogglePause();
         nextLvl.SetActive(!nextLvl.activeSelf);
-        if(SoundList.Effects) {
-            audioSource.clip = SoundList.MooSound1;
-            audioSource.volume = SoundList.VolumeMusic;
-            audioSource.loop = false;
-            audioSource.Play();
-        }
-    }
-    public void ToggleMusic()
-    {
-        SoundList.Music = !SoundList.Music;
-        audioSource.volume = SoundList.Music ? SoundList.VolumeMusic : 0f;
-        PlayerPrefs.SetInt("musicSet", SoundList.Music ? 1 : 0);
-    }
-    public void ToggleEffects()
-    {
-        SoundList.Effects = !SoundList.Effects;
-        PlayerPrefs.SetInt("effectSet", SoundList.Effects ? 1 : 0);
+        audioSource.clip = SoundList.MooSound1;
+        audioSource.volume = SoundList.VolumeMusic;
+        audioSource.loop = false;
+        audioSource.Play();
     }
     public void SetVolume()
     {
         SoundList.VolumeMusic = sliderVolumen.value / 100f;
-        audioSource.volume = SoundList.Music ? SoundList.VolumeMusic : 0f;
+        audioSource.volume = SoundList.VolumeMusic;
         PlayerPrefs.SetFloat("volumeSet", SoundList.VolumeMusic);
     }
     public void ExitGame()
